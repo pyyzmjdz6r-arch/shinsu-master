@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#4f46e5">
+<title>進数マスター｜情報Ⅰ</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1e2440;--muted:#6c728b;--accent:#4f46e5;--accent2:#e9e8ff;--ok:#15803d;--bad:#b91c1c;--line:#e4e7f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:24px 18px 30px;border-radius:0 0 26px 26px}
+header .eyebrow{font-size:12px;letter-spacing:.12em;opacity:.85}h1{font-size:27px;margin:5px 0 4px}header p{margin:0;opacity:.92;font-size:14px}
+main{max-width:720px;margin:-12px auto 40px;padding:0 14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 6px 18px #25275a0a}
+h2{font-size:17px;margin:0 0 12px}.small{font-size:13px;color:var(--muted)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+button,select{font:inherit;cursor:pointer}button{border:0;border-radius:13px;padding:12px 14px;font-weight:700;transition:transform .08s}button:active{transform:scale(.98)}
+.mode{background:#f0f1fa;color:var(--ink);border:2px solid transparent;text-align:left;min-height:70px}.mode.active{border-color:var(--accent);background:var(--accent2)}
+.mode span{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:3px}
+.primary{background:var(--accent);color:white;width:100%;margin-top:10px}.secondary{background:#eef0f8;color:var(--ink)}.tiny{padding:8px 10px;font-size:13px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.pill{font-size:12px;background:var(--accent2);color:var(--accent);border-radius:999px;padding:5px 10px;font-weight:700}
+.progress{height:7px;background:#eceef6;border-radius:20px;overflow:hidden;margin:10px 0 18px}.bar{height:100%;background:linear-gradient(90deg,#4f46e5,#a78bfa);width:0%;transition:width .2s}
+.question{font-size:23px;font-weight:800;letter-spacing:.02em;margin:12px 0 20px;overflow-wrap:anywhere}.question .sub{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-bottom:8px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer{background:white;border:2px solid var(--line);text-align:left;min-height:58px;color:var(--ink);font-size:17px}.answer .letter{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:8px;background:#f0f1fa;margin-right:8px;font-size:13px}.answer.correct{border-color:#22a05a;background:#f0fdf4}.answer.wrong{border-color:#ef4444;background:#fff1f2}.answer:disabled{cursor:default}
+.feedback{border-radius:14px;padding:13px 14px;margin-top:14px;font-size:14px}.feedback.ok{background:#f0fdf4;color:#166534}.feedback.ng{background:#fff1f2;color:#9f1239}.feedback strong{display:block;margin-bottom:3px}
+.actions{display:flex;gap:8px;margin-top:14px}.actions button{flex:1}.hidden{display:none!important}
+input[type=number]{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit}
+.scorebig{font-size:42px;font-weight:900;color:var(--accent);text-align:center}.center{text-align:center}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f5f6fc;padding:12px 8px;border-radius:13px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--muted)}
+footer{text-align:center;font-size:12px;color:var(--muted);padding:12px}
+@media(max-width:420px){.answers{grid-template-columns:1fr}.question{font-size:21px}.panel{padding:15px}.modes{gap:7px}.mode{padding:10px}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">INFORMATION I · TEST PRACTICE</div><h1>進数マスター</h1><p>2進数・10進数・16進数の変換と、2進数の計算を攻略しよう！</p></header>
+<main>
+<section class="panel" id="setup">
+<h2>練習モードを選ぼう</h2>
+<div class="modes">
+<button class="mode active" data-mode="convert"><b>🔁 進数変換</b><span>2進数・10進数・16進数</span></button>
+<button class="mode" data-mode="calc"><b>➕ 2進数の計算</b><span>足し算・引き算</span></button>
+<button class="mode" data-mode="mix"><b>🎯 ミックス</b><span>変換＋計算</span></button>
+<button class="mode" data-mode="challenge"><b>⚡ テストモード</b><span>10問連続・結果を記録</span></button>
+</div>
+<div style="margin-top:16px"><label for="level"><b>難易度</b></label><select id="level" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:6px;background:white"><option value="easy">基礎（小さめの数）</option><option value="normal" selected>標準（テスト対策）</option><option value="hard">応用（大きな数）</option></select></div>
+<button class="primary" id="start">クイズを始める</button>
+<p class="small" style="margin-bottom:0">各問題は選択式。答えと解説を確認してから次へ進めます。</p>
+</section>
+
+<section class="panel hidden" id="quiz">
+<div class="topline"><span class="pill" id="modeLabel">進数変換</span><span class="small" id="counter">1 / 10</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
+<div class="feedback hidden" id="feedback" aria-live="polite"></div>
+<div class="actions"><button class="secondary" id="quit">メニューへ</button><button class="primary" id="next" disabled>次の問題 →</button></div>
+</section>
+
+<section class="panel hidden" id="result">
+<div class="center"><div class="small">QUIZ COMPLETE</div><h2 style="margin-top:4px">おつかれさま！</h2><div class="scorebig" id="score">0 / 10</div><p id="resultMessage"></p></div>
+<div class="statgrid"><div class="stat"><b id="correctStat">0</b><span>正解</span></div><div class="stat"><b id="wrongStat">0</b><span>復習問題</span></div><div class="stat"><b id="rateStat">0%</b><span>正答率</span></div></div>
+<div id="review" style="margin-top:16px"></div>
+<button class="primary" id="again">同じモードでもう一度</button><button class="secondary" id="home" style="width:100%;margin-top:8px">モード選択へ戻る</button>
+</section>
+<section class="panel" id="tips"><h2>テスト前のポイント</h2>
+<ul style="padding-left:20px;margin-bottom:8px"><li><b>2進数 → 10進数：</b>右から1、2、4、8、16…の位。</li><li><b>2進数 → 16進数：</b>右から4桁ずつ区切る。</li><li><b>16進数：</b>A=10、B=11、C=12、D=13、E=14、F=15。</li><li><b>2進数の計算：</b>1＋1は10、1＋1＋1は11。</li></ul><p class="small">このアプリは通信なしで動きます。成績はこの画面を開いている間に集計されます。</p></section>
+<footer>進数マスター · 情報Ⅰテスト対策</footer>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let selectedMode='convert', level='normal', questions=[], index=0, score=0, mistakes=[], lastMode='convert', answered=false;
+const modeNames={convert:'進数変換',calc:'2進数の計算',mix:'ミックス',challenge:'テストモード'};
+document.querySelectorAll('.mode').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');selectedMode=b.dataset.mode;}));
+$('#level').addEventListener('change',e=>level=e.target.value);
+const toBin=n=>n.toString(2), toHex=n=>n.toString(16).toUpperCase();
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function makeConvert(){
+ let n=rand(4,level==='easy'?31:level==='normal'?127:511);
+ let type=rand(0,2);
+ if(type===0)return {q:`${n.toString(2)}₂ を10進数にすると？`,ans:String(n),ex:`2進数 ${n.toString(2)}₂ は、${n}₁₀ です。各桁の重みを足すと ${n} になります。`};
+ if(type===1)return {q:`${n}₁₀ を2進数にすると？`,ans:toBin(n),ex:`${n}₁₀ を2の累乗の和で表すと、2進数では ${toBin(n)}₂ です。`};
+ let hex=toHex(n);
+ return {q:`${n.toString(2)}₂ を16進数にすると？`,ans:hex,ex:`2進数を右から4桁ずつ区切ると、16進数では ${hex}₁₆ になります。`};
+}
+function makeCalc(){
+ let a=rand(2,level==='easy'?15:level==='normal'?31:63), b=rand(1,a);
+ let sub=Math.random()<.45, result=sub?a-b:a+b;
+ let q=sub?`${toBin(a)}₂ − ${toBin(b)}₂ = □₂`:`${toBin(a)}₂ ＋ ${toBin(b)}₂ = □₂`;
+ return {q,ans:toBin(result),ex:`${a} ${sub?'−':'＋'} ${b} = ${result} なので、答えは ${toBin(result)}₂ です。`};
+}
+function makeQuestion(mode){if(mode==='convert')return makeConvert();if(mode==='calc')return makeCalc();return Math.random()<.55?makeConvert():makeCalc()}
+function makeOptions(correct){
+ const opts=new Set([String(correct)]);
+ let num=parseInt(correct, (String(correct).match(/[A-F]/)?16:2));
+ if(!Number.isFinite(num))num=Number(correct);
+ let guard=0;
+ while(opts.size<4&&guard++<100){
+  let v;
+  if(Math.random()<.5){let d=rand(-4,4);v=String(Math.max(0,num+d));}
+  else v=(Math.max(0,num+rand(-5,5))).toString(2);
+  if(String(correct).match(/^[0-9A-F]+$/)&&/[A-F]/.test(correct))v=Math.max(0,num+rand(-5,5)).toString(16).toUpperCase();
+  if(String(v)!==String(correct))opts.add(String(v));
+ }
+ while(opts.size<4)opts.add(String(rand(1,99)));
+ return [...opts].sort(()=>Math.random()-.5);
+}
+function start(){
+ level=$('#level').value;lastMode=selectedMode;const count=selectedMode==='challenge'?10:10;
+ questions=Array.from({length:count},()=>makeQuestion(selectedMode==='challenge'?'mix':selectedMode));
+ index=0;score=0;mistakes=[];$('#setup').classList.add('hidden');$('#tips').classList.add('hidden');$('#result').classList.add('hidden');$('#quiz').classList.remove('hidden');render();
+}
+function render(){
+ answered=false;let item=questions[index];
+ $('#modeLabel').textContent=modeNames[lastMode];$('#counter').textContent=`${index+1} / ${questions.length}`;$('#bar').style.width=`${index/questions.length*100}%`;
+ $('#question').innerHTML=`<span class="sub">第 ${index+1} 問</span>${item.q}`;
+ $('#answers').innerHTML='';$('#feedback').className='feedback hidden';$('#next').disabled=true;$('#next').textContent=index===questions.length-1?'結果を見る':'次の問題 →';
+ let opts=makeOptions(item.ans);
+ opts.forEach((v,i)=>{let b=document.createElement('button');b.className='answer';b.innerHTML=`<span class="letter">${'ABCD'[i]}</span>${v}`;b.addEventListener('click',()=>choose(v,b));$('#answers').appendChild(b)});
+}
+function choose(value,button){
+ if(answered)return;answered=true;let item=questions[index],ok=String(value)===String(item.ans);
+ if(ok)score++;else mistakes.push({q:item.q,ans:item.ans,chosen:value});
+ document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;if(b.textContent.trim().slice(1)===String(item.ans))b.classList.add('correct')});
+ if(!ok)button.classList.add('wrong');
+ let f=$('#feedback');f.className='feedback '+(ok?'ok':'ng');f.innerHTML=`<strong>${ok?'正解！ 🎉':'おしい！ 正解は '+item.ans}</strong>${item.ex}`;
+ $('#next').disabled=false;
+}
+function finish(){
+ $('#quiz').classList.add('hidden');$('#result').classList.remove('hidden');let total=questions.length,rate=Math.round(score/total*100);
+ $('#score').textContent=`${score} / ${total}`;$('#correctStat').textContent=score;$('#wrongStat').textContent=mistakes.length;$('#rateStat').textContent=rate+'%';
+ $('#resultMessage').textContent=rate===100?'満点ですわ！すばらしい出来です。':rate>=70?'いい調子です！間違えた問題を復習しましょう。':'間違えた問題を確認して、もう一度挑戦しましょう！';
+ $('#review').innerHTML=mistakes.length?'<h2>復習する問題</h2>'+mistakes.map(m=>`<div style="border-top:1px solid var(--line);padding:10px 0"><b>${m.q}</b><div class="small">あなたの答え：${m.chosen} ／ 正解：${m.ans}</div></div>`).join(''):'<p class="center">復習問題はありません！</p>';
+}
+$('#start').addEventListener('click',start);$('#next').addEventListener('click',()=>{if(index<questions.length-1){index++;render()}else finish()});
+$('#quit').addEventListener('click',()=>{if(confirm('メニューに戻りますか？今回の進行状況は終了します。')){$('#quiz').classList.add('hidden');$('#setup').classList.remove('hidden');$('#tips').classList.remove('hidden')}});
+$('#again').addEventListener('click',start);$('#home').addEventListener('click',()=>{$('#result').classList.add('hidden');$('#setup').classList.remove('hidden');$('#tips').classList.remove('hidden')});
+</script>
+</body>
+</html>
